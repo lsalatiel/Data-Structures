@@ -22,5 +22,7 @@ int main() {
         }
     }
 
+    uf_destroy(uf);
+
     return 0;
 }
