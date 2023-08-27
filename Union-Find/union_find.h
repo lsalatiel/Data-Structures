@@ -9,7 +9,7 @@ UnionFind *uf_construct(int size);
 
 void uf_destroy(UnionFind *uf);
 
-int uf_find(UnionFind *uf, int p);
+int uf_find_root(UnionFind *uf, int p);
 
 bool uf_connected(UnionFind *uf, int p, int q);
 

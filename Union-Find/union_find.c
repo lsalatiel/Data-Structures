@@ -24,20 +24,20 @@ void uf_destroy(UnionFind *uf) {
     free(uf);
 }
 
-int uf_find(UnionFind *uf, int p) {
-    return uf->array[p];
+int uf_find_root(UnionFind *uf, int p) {
+    while(uf->array[p] != p)
+        p = uf->array[p];
+
+    return p;
 }
 
 bool uf_connected(UnionFind *uf, int p, int q) {
-    return uf_find(uf, p) == uf_find(uf, q);
+    return uf_find_root(uf, p) == uf_find_root(uf, q);
 }
 
 void uf_union(UnionFind *uf, int p, int q) {
-    int p_idx = uf_find(uf, p);
-    int q_idx = uf_find(uf, q);
+    int p_root = uf_find_root(uf, p);
+    int q_root = uf_find_root(uf, q);
 
-    for(int i = 0; i < uf->size; i++) {
-        if(uf->array[i] == p_idx)
-            uf->array[i] = q_idx;
-    }
+    uf->array[p_root] = q_root;
 }
