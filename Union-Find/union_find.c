@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 struct UnionFind {
-    int *array;
+    int *id;
     int size;
     int *sz;
 };
@@ -11,11 +11,11 @@ UnionFind *uf_construct(int size) {
     UnionFind *uf = malloc(sizeof(UnionFind));
 
     uf->size = size;
-    uf->array = malloc(size * sizeof(int));
+    uf->id = malloc(size * sizeof(int));
     uf->sz = malloc(size * sizeof(int));
     
     for(int i = 0; i < size; i++) {
-        uf->array[i] = i;
+        uf->id[i] = i;
         uf->sz[i] = 1;
     }
 
@@ -23,14 +23,16 @@ UnionFind *uf_construct(int size) {
 }
 
 void uf_destroy(UnionFind *uf) {
-    free(uf->array);
+    free(uf->id);
     free(uf->sz);
     free(uf);
 }
 
 int uf_find_root(UnionFind *uf, int p) {
-    while(uf->array[p] != p)
-        p = uf->array[p];
+    while(uf->id[p] != p) {
+        uf->id[p] = uf->id[uf->id[p]];
+        p = uf->id[p];
+    }
 
     return p;
 }
@@ -44,11 +46,11 @@ void uf_union(UnionFind *uf, int p, int q) {
     int q_root = uf_find_root(uf, q);
 
     if(uf->sz[p_root] < uf->sz[q_root]) {
-        uf->array[p_root] = q_root;
+        uf->id[p_root] = q_root;
         uf->sz[q_root] += uf->sz[p_root];
     }
     else {
-        uf->array[q_root] = p_root;
+        uf->id[q_root] = p_root;
         uf->sz[p_root] += uf->sz[q_root];
     }
 }
